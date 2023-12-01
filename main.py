@@ -4,6 +4,7 @@ import uvicorn
 from  pydantic import BaseModel, Field
 from typing import Optional, List
 import time
+from jwt_manager import create_token
 
 #modelado de plantalla de peliculas
 class pelicula(BaseModel):
@@ -21,6 +22,11 @@ app = FastAPI()
 #cambio en la documentacion
 app.title = "Mi aplicacion de peliculas"
 app.version = "0.0.1"
+
+class User(BaseModel):
+    email:str
+    password:str
+
 class Movie(BaseModel):
     id: Optional[int] = None
     title: str = Field(default="Mi Pelicula", min_length=5, max_length=30)
@@ -125,3 +131,12 @@ def delete_movie(id:int):
             movies.remove(movie)
             break
     return JSONResponse(content={"message":"Movie deleted suceesfully"}, status_code=200)
+
+@app.post("/login",tags=['auth'],response_model=dict,status_code=200)
+def login(user:User):
+    if(user.email =="admin@mail.com" and user.password == "admin"):
+        token = create_token(data = user.model_dump())
+        result = JSONResponse(content={"token":token},status_code=200)
+    else:
+        result = JSONResponse(content={"message":"invalid credentials"},status_code=200)
+    return result
