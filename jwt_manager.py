@@ -1,8 +1,9 @@
 from jwt import encode,decode
-pwd = '1234567890'
 
-def create_token(data,secret=pwd):
-    return encode(payload=data,key=secret,algorithm = 'HS256')
+def create_token(data: dict, secret: str= "1234567890") -> str:
+    token = encode(payload=data, key=secret, algorithm="HS256")
+    return token
 
-def validate_token(token):
-    return decode(token,pwd,algorithms = 'HS256')
+def validate_token(token: str):
+    data = decode(token, "1234567890", algorithms=["HS256"])
+    return data
