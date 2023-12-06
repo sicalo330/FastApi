@@ -54,7 +54,7 @@ def create_movie(movie: Movie):
                         status_code=201)
 
 @movie_router.put("/movies/{id}", tags=['movies'])
-def update_movie(movie: Movie):
+def update_movie(id:int,movie: Movie):
     db = Session()
     result = db.query(MovieModel).filter(MovieModel.id == id).first()
     if not result:
@@ -75,7 +75,7 @@ def delete_movie(id: int):
     db = Session()
     result = db.query(MovieModel).filter(MovieModel.id == id).first()
     if not result:
-        return JSONresponse(status_code=404, content={'message': 'Not Found'})
+        return JSONResponse(status_code=404, content={'message': 'Not Found'})
     db.delete(result)
     db.commit()
     return JSONResponse(content={"message": "Movie deleted successfully"},
