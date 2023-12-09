@@ -1,0 +1,14 @@
+{
+    "testing":{
+        "headers":{
+            "Token":"110a8227op"
+        },
+        "url":"http://127.0.0.1:8000"
+    },
+    "development":{
+        "headers":{
+            "Token":"110a8227op"
+        },
+        "url":"http://127.0.0.1:8000"
+    }
+}
