@@ -50,8 +50,7 @@ def create_movie(movie: Movie):
     new_movie = MovieModel(**movie.model_dump())
     db.add(new_movie)
     db.commit()
-    return JSONResponse(content={"message": "Movie created successfully"},
-                        status_code=201)
+    return JSONResponse(content={"message": "Movie created successfully"},status_code=201)
 
 @movie_router.put("/movies/{id}", tags=['movies'])
 def update_movie(id:int,movie: Movie):

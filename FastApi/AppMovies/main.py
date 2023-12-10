@@ -1,14 +1,9 @@
 import time
-from fastapi import FastAPI, Path, Query, Request, HTTPException
-from pydantic import BaseModel, Field
-from typing import Optional, List
+from fastapi import FastAPI
+from pydantic import BaseModel
 from fastapi.responses import HTMLResponse, JSONResponse
-from jwt_manager import create_token, validate_token
-from fastapi.security import HTTPBearer
-
+from jwt_manager import create_token
 from config.database import engine, Base
-
-from middlewares.jwt_bearer import JWTBearer
 from middlewares.error_handler import ErrorHandler
 
 from routers.movie import movie_router
@@ -32,8 +27,8 @@ class User(BaseModel):
 def message():
     return HTMLResponse(content="<h1>Hola mamá aprendí a programar</h1>")
 
-@app.post("/login", 
-          tags=['auth'], 
+@app.post("/login",
+          tags=['auth'],
           response_model=dict, status_code=200)
 def login(user: User):
     if user.email == "admin@mail.com" and user.password == "admin":
