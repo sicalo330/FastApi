@@ -9,6 +9,7 @@ from fastapi.encoders import jsonable_encoder
 pacienteRouter = APIRouter()
 
 class PacienteBase(BaseModel):
+    id: Optional[int] = None
     nombre: str = Field(min_length=2, max_length=40)
     apellido: str = Field(min_length=1, max_length=20)
     edad: int = Field(ge=1, le=116)
@@ -27,10 +28,10 @@ def getPaciente() -> List[Paciente]:
     result = db.query(PacienteModel).all()
     return jsonable_encoder(result)
 
-@pacienteRouter.post("/pacientes", tags=['Crear'], response_model=dict, status_code=201)
+@pacienteRouter.post("/pacientes", tags=['Crear'], response_model=Paciente, status_code=201)
 def crearPaciente(paciente: PacienteCreate):
     db = Session()
-    newPaciente = PacienteModel(**paciente.dict())
+    newPaciente = PacienteModel(**paciente.model_dump())
     db.add(newPaciente)
     db.commit()
     return JSONResponse(content={"message": "Paciente creado"})
