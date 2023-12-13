@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from routers.paciente import pacienteRouter
 from routers.veteriario import veterinarioRouter
+from routers.tratamiento import tratamientoRouter
 from config.database import engine, Base
 
 app = FastAPI()
@@ -11,6 +12,7 @@ app.version = "1.0.0"
 
 app.include_router(pacienteRouter)
 app.include_router(veterinarioRouter)
+app.include_router(tratamientoRouter)
 
 Base.metadata.create_all(bind = engine)
 

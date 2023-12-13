@@ -14,13 +14,13 @@ class Veterinario(BaseModel):
     apellido: str = Field(min_length=1,max_length=40)
     edad: int = Field(ge=1,le=116)
 
-@veterinarioRouter.get("/veterinario",tags=['Ver'],response_model=List[Veterinario],status_code=200)
+@veterinarioRouter.get("/veterinario",tags=['VerVeterinario'],response_model=List[Veterinario],status_code=200)
 def getVeterinario() -> List[Veterinario]:
     db = Session()
     result = db.query(VeterinarioModel).all()
     return JSONResponse(status_code=200, content=jsonable_encoder(result))
 
-@veterinarioRouter.get("/veterinario/{id}",tags=['Ver'],response_model=Veterinario, status_code=200)
+@veterinarioRouter.get("/veterinario/{id}",tags=['VerVeterinario'],response_model=Veterinario, status_code=200)
 def getVeterinarioId(id:int = Path(ge = 1,le = 2000)):
     db = Session()
     result = db.query(VeterinarioModel).filter(VeterinarioModel.id == id).first()
@@ -29,7 +29,7 @@ def getVeterinarioId(id:int = Path(ge = 1,le = 2000)):
         response = JSONResponse(content={"message":"Veterinario no encontrado"}, status_code=404)
     return response
 
-@veterinarioRouter.post("/veterinario",tags=['Crear'],response_model=dict,status_code=202)
+@veterinarioRouter.post("/veterinario",tags=['CrearVeterinario'],response_model=dict,status_code=202)
 def crearVeterinario(veterinario: Veterinario):
     db = Session()
     newVeterinario = VeterinarioModel(**veterinario.model_dump())
@@ -37,7 +37,7 @@ def crearVeterinario(veterinario: Veterinario):
     db.commit()
     return JSONResponse(content={"message":"VeterinarioCreado"})
 
-@veterinarioRouter.put("/veterinario/{id}",tags=["Actualizar"])
+@veterinarioRouter.put("/veterinario/{id}",tags=["ActualizarVeterinario"])
 def actualizarVeterinario(id:int, veterinario:Veterinario):
     db = Session()
     result = db.query(VeterinarioModel).filter(VeterinarioModel.id == id).first()
@@ -50,7 +50,7 @@ def actualizarVeterinario(id:int, veterinario:Veterinario):
     db.commit()
     return JSONResponse(content={"message":"Veterinario actualizado"},status_code=200)
 
-@veterinarioRouter.delete("/veterinario/{id}",tags=['Eliminar'],response_model=dict)
+@veterinarioRouter.delete("/veterinario/{id}",tags=['EliminarVeterinario'],response_model=dict)
 def eliminarVeterinario(id:int):
     db = Session()
     result = db.query(VeterinarioModel).filter(VeterinarioModel.id == id).first()

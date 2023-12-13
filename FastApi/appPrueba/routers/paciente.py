@@ -6,7 +6,6 @@ from config.database import Session
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import joinedload
-
 pacienteRouter = APIRouter()
 
 class PacienteBase(BaseModel):
@@ -25,14 +24,14 @@ class Paciente(PacienteBase):
     veterinario: Optional[int] = None
 
 #Obtendrá todos los pacientes que están en la base de datos
-@pacienteRouter.get("/pacientes", tags=['Ver'], response_model=List[Paciente], status_code=200)
+@pacienteRouter.get("/pacientes", tags=['VerPaciente'], response_model=List[Paciente], status_code=200)
 def getPaciente() -> List[Paciente]:
     db = Session()
     result = db.query(PacienteModel).all()
     return JSONResponse(status_code=200, content=jsonable_encoder(result))
 
 #Obtendrá un paciente tomando una id como parámetro
-@pacienteRouter.get("/pacientes/{id}",tags=["Ver"],response_model=Paciente, status_code=200)
+@pacienteRouter.get("/pacientes/{id}",tags=["VerPaciente"],response_model=Paciente, status_code=200)
 def getPacienteId(id:int = Path(ge=1,le=2000)):
     db = Session()
     result = db.query(PacienteModel).filter(PacienteModel.id == id).options(joinedload(PacienteModel.veterinario)).first()
@@ -42,7 +41,7 @@ def getPacienteId(id:int = Path(ge=1,le=2000)):
     return response
 
 
-@pacienteRouter.post("/pacientes", tags=['Crear'], response_model=Paciente, status_code=201)
+@pacienteRouter.post("/pacientes", tags=['CrearPaciente'], response_model=Paciente, status_code=201)
 def crearPaciente(paciente: PacienteCreate):
     db = Session()
     newPaciente = PacienteModel(**paciente.model_dump())
@@ -50,7 +49,7 @@ def crearPaciente(paciente: PacienteCreate):
     db.commit()
     return JSONResponse(content={"message": "Paciente creado"})
 
-@pacienteRouter.put("/paciente/{id}", tags=["Actualizar"])
+@pacienteRouter.put("/paciente/{id}", tags=["ActualizarPaciente"])
 def actualizarVeterinario(id: int, paciente: PacienteCreate):
     db = Session()
     result = db.query(PacienteModel).filter(PacienteModel.id == id).first()
@@ -63,7 +62,7 @@ def actualizarVeterinario(id: int, paciente: PacienteCreate):
     db.commit()
     return JSONResponse(content={"message": "Paciente actualizado"}, status_code=200)
 
-@pacienteRouter.delete("/paciente/{id}",tags=['Eliminar'],response_model=dict)
+@pacienteRouter.delete("/paciente/{id}",tags=['EliminarPaciente'],response_model=dict)
 def eliminarVeterinario(id:int):
     db = Session()
     result = db.query(PacienteModel).filter(PacienteModel.id == id).first()
