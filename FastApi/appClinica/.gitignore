@@ -10,6 +10,7 @@
 *.sqlite3
 *.db-shm
 *.db-wal
+*.sqlite
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
